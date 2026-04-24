@@ -6,16 +6,10 @@ import time
 import pytest
 from fastapi.testclient import TestClient
 
-from app.main import app
-
-
-@pytest.fixture()
-def client() -> TestClient:
-    return TestClient(app)
-
 
 def test_job_analyze_completes(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("DOC2ACTION_API_KEY", raising=False)
+    monkeypatch.delenv("DOC2ACTION_JWT_SECRET", raising=False)
     monkeypatch.delenv("DOC2ACTION_REDIS_URL", raising=False)
     r = client.post(
         "/api/v1/jobs/analyze",
@@ -45,6 +39,7 @@ def test_job_analyze_completes(client: TestClient, monkeypatch: pytest.MonkeyPat
 
 def test_job_unknown_404(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("DOC2ACTION_API_KEY", raising=False)
+    monkeypatch.delenv("DOC2ACTION_JWT_SECRET", raising=False)
     monkeypatch.delenv("DOC2ACTION_REDIS_URL", raising=False)
     r = client.get("/api/v1/jobs/00000000-0000-0000-0000-000000000000")
     assert r.status_code == 404

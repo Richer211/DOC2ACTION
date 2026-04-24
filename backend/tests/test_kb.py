@@ -4,13 +4,6 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 
-from app.main import app
-
-
-@pytest.fixture()
-def client() -> TestClient:
-    return TestClient(app)
-
 
 def test_kb_collections_and_documents(
     client: TestClient, monkeypatch: pytest.MonkeyPatch, tmp_path

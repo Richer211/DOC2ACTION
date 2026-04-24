@@ -1,6 +1,8 @@
 """P0/P1: SQLite analysis store + eval summary API."""
 from __future__ import annotations
 
+from collections.abc import Generator
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -8,15 +10,13 @@ from app.main import app
 
 
 @pytest.fixture()
-def client(tmp_path, monkeypatch: pytest.MonkeyPatch) -> TestClient:
+def client(tmp_path, monkeypatch: pytest.MonkeyPatch) -> Generator[TestClient, None, None]:
     monkeypatch.setenv("DOC2ACTION_ANALYSIS_DB", str(tmp_path / "a.sqlite"))
     monkeypatch.delenv("DOC2ACTION_API_KEY", raising=False)
     monkeypatch.delenv("DOC2ACTION_JWT_SECRET", raising=False)
     monkeypatch.delenv("DOC2ACTION_REDIS_URL", raising=False)
-    import app.analysis_store as store
-
-    store.init_schema()
-    return TestClient(app)
+    with TestClient(app) as test_client:
+        yield test_client
 
 
 def test_analyses_recent_after_sync_rules(client: TestClient) -> None:

@@ -4,13 +4,6 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 
-from app.main import app
-
-
-@pytest.fixture()
-def client() -> TestClient:
-    return TestClient(app)
-
 
 def test_jwt_token_and_analyze_rules(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("DOC2ACTION_API_KEY", raising=False)
