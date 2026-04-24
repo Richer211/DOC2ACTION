@@ -1,0 +1,107 @@
+{
+  "summary": "当用户在 48 小时内多次提交退款申请且情绪激动时，客服需要在 10 分钟内完成升级处理；在处理完成后回填标签：refund_escalated",
+  "action_items": [
+    {
+      "title": "当用户在 48 小时内多次提交退款申请且情绪激动时，客服需要在 10 分钟内完成升级处理",
+      "priority": "medium",
+      "source_chunk_ids": [
+        1
+      ]
+    },
+    {
+      "title": "在处理完成后回填标签：refund_escalated",
+      "priority": "medium",
+      "source_chunk_ids": [
+        1
+      ]
+    },
+    {
+      "title": "在工单系统确认订单状态是否已发货。",
+      "priority": "medium",
+      "source_chunk_ids": [
+        1
+      ]
+    },
+    {
+      "title": "检查是否存在历史补偿记录。",
+      "priority": "medium",
+      "source_chunk_ids": [
+        1
+      ]
+    },
+    {
+      "title": "若用户重复投诉超过 2 次，升级到值班主管。",
+      "priority": "medium",
+      "source_chunk_ids": [
+        1
+      ]
+    },
+    {
+      "title": "在升级备注中写明：投诉原因、用户诉求、已执行动作。",
+      "priority": "medium",
+      "source_chunk_ids": [
+        1
+      ]
+    }
+  ],
+  "risks": [
+    {
+      "description": "若未记录历史补偿，可能重复赔付。",
+      "severity": "medium",
+      "source_chunk_ids": [
+        1
+      ]
+    },
+    {
+      "description": "若升级备注不完整，主管无法快速判断优先级。",
+      "severity": "medium",
+      "source_chunk_ids": [
+        1
+      ]
+    },
+    {
+      "description": "夜间值班时若交接遗漏，用户可能在次日再次投诉。",
+      "severity": "medium",
+      "source_chunk_ids": [
+        1
+      ]
+    }
+  ],
+  "open_questions": [
+    {
+      "question": "在工单系统确认订单状态是否已发货",
+      "source_chunk_ids": [
+        1
+      ]
+    },
+    {
+      "question": "检查是否存在历史补偿记录",
+      "source_chunk_ids": [
+        1
+      ]
+    },
+    {
+      "question": "是否要给重复投诉用户自动发安抚短信",
+      "source_chunk_ids": [
+        1
+      ]
+    },
+    {
+      "question": "标签体系是否需要新增“高情绪用户”分类",
+      "source_chunk_ids": [
+        1
+      ]
+    }
+  ],
+  "chunks": [
+    {
+      "id": 1,
+      "text": "# SOP Note - Customer Refund Escalation\n## 场景\n当用户在 48 小时内多次提交退款申请且情绪激动时，客服需要在 10 分钟内完成升级处理。\n## 操作步骤\n1. 在工单系统确认订单状态是否已发货。\n2. 检查是否存在历史补偿记录。\n3. 若用户重复投诉超过 2 次，升级到值班主管。\n4. 在升级备注中写明：投诉原因、用户诉求、已执行动作。\n5. 在处理完成后回填标签：refund_escalated。\n## 风险提醒\n- 若未记录历史补偿，可能重复赔付。\n- 若升级备注不完整，主管无法快速判断优先级。\n- 夜间值班时若交接遗漏，用户可能在次日再次投诉。\n## 待确认\n- 是否要给重复投诉用户自动发安抚短信？\n- 标签体系是否需要新增“高情绪用户”分类？"
+    }
+  ],
+  "meta": {
+    "document_type": "sop",
+    "chunk_count": 1,
+    "used_llm": false
+  }
+}

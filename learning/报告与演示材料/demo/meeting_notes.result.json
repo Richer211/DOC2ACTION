@@ -1,0 +1,81 @@
+{
+  "summary": "本周要上线移动端结账页 v1；首发范围只包含支付宝，不包含银行卡和优惠券叠加",
+  "action_items": [
+    {
+      "title": "前端需要在周三前完成结账页 UI 和支付状态页",
+      "priority": "medium",
+      "source_chunk_ids": [
+        1
+      ]
+    },
+    {
+      "title": "后端需要提供创建订单和支付回调接口，并输出错误码文档",
+      "priority": "medium",
+      "source_chunk_ids": [
+        1
+      ]
+    },
+    {
+      "title": "测试需要准备真机兼容性清单，覆盖 iOS Safari 和 Android Chrome",
+      "priority": "medium",
+      "source_chunk_ids": [
+        1
+      ]
+    },
+    {
+      "title": "运营需要周四前确认文案与活动规则",
+      "priority": "medium",
+      "source_chunk_ids": [
+        1
+      ]
+    }
+  ],
+  "risks": [
+    {
+      "description": "支付回调偶发超时，可能导致订单状态延迟更新。",
+      "severity": "medium",
+      "source_chunk_ids": [
+        1
+      ]
+    },
+    {
+      "description": "若错误码文档不完整，前端会无法准确提示失败原因。",
+      "severity": "medium",
+      "source_chunk_ids": [
+        1
+      ]
+    },
+    {
+      "description": "上线窗口只有周五下午，回滚时间非常有限。",
+      "severity": "medium",
+      "source_chunk_ids": [
+        1
+      ]
+    }
+  ],
+  "open_questions": [
+    {
+      "question": "是否需要为支付失败增加“重试支付”入口",
+      "source_chunk_ids": [
+        1
+      ]
+    },
+    {
+      "question": "如果用户关闭页面，是否需要短信提醒支付结果",
+      "source_chunk_ids": [
+        1
+      ]
+    }
+  ],
+  "chunks": [
+    {
+      "id": 1,
+      "text": "# Meeting Notes - Mobile Checkout v1\n会议时间：2026-03-20 10:00-11:00\n参会人：PM、前端、后端、测试、运营\n## 会议结论\n- 本周要上线移动端结账页 v1。\n- 首发范围只包含支付宝，不包含银行卡和优惠券叠加。\n- 运营希望首页 Banner 同步引流到结账页。\n## 待办事项\n- 前端需要在周三前完成结账页 UI 和支付状态页。\n- 后端需要提供创建订单和支付回调接口，并输出错误码文档。\n- 测试需要准备真机兼容性清单，覆盖 iOS Safari 和 Android Chrome。\n- 运营需要周四前确认文案与活动规则。\n## 风险点\n- 支付回调偶发超时，可能导致订单状态延迟更新。\n- 若错误码文档不完整，前端会无法准确提示失败原因。\n- 上线窗口只有周五下午，回滚时间非常有限。\n## 待确认问题\n- 是否需要为支付失败增加“重试支付”入口？\n- 如果用户关闭页面，是否需要短信提醒支付结果？"
+    }
+  ],
+  "meta": {
+    "document_type": "meeting_notes",
+    "chunk_count": 1,
+    "used_llm": false
+  }
+}

@@ -1,0 +1,245 @@
+{
+  "aggregate": {
+    "sample_count": 21,
+    "action_f1": 0.0119,
+    "risk_f1": 0.3333,
+    "question_f1": 0.7143,
+    "summary_jaccard": 0.2213,
+    "citation_hit_rate": 1.0,
+    "duplication_rate": 0.0238,
+    "used_llm_rate": 0.0
+  },
+  "per_sample": [
+    {
+      "id": "enron-00029",
+      "document_type": "email_thread",
+      "action_f1": 0.0,
+      "risk_f1": 0.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.3571,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": false
+    },
+    {
+      "id": "meetingbank-train-14",
+      "document_type": "meeting_notes",
+      "action_f1": 0.0,
+      "risk_f1": 0.0,
+      "question_f1": 0.0,
+      "summary_jaccard": 0.4138,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": false
+    },
+    {
+      "id": "EN2002c.B",
+      "document_type": "meeting_notes",
+      "action_f1": 0.0,
+      "risk_f1": 0.0,
+      "question_f1": 0.0,
+      "summary_jaccard": 0.0867,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": false
+    },
+    {
+      "id": "EN2001e.A",
+      "document_type": "meeting_notes",
+      "action_f1": 0.0,
+      "risk_f1": 0.0,
+      "question_f1": 0.0,
+      "summary_jaccard": 0.0757,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": false
+    },
+    {
+      "id": "JFrog-84478",
+      "document_type": "general",
+      "action_f1": 0.0,
+      "risk_f1": 1.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.1311,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": false
+    },
+    {
+      "id": "JiraEcosystem-276837",
+      "document_type": "general",
+      "action_f1": 0.0,
+      "risk_f1": 0.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.1512,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": false
+    },
+    {
+      "id": "Jira-1838131",
+      "document_type": "general",
+      "action_f1": 0.0,
+      "risk_f1": 1.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.1655,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": false
+    },
+    {
+      "id": "Mojang-490600",
+      "document_type": "general",
+      "action_f1": 0.0,
+      "risk_f1": 0.0,
+      "question_f1": 0.0,
+      "summary_jaccard": 0.089,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": false
+    },
+    {
+      "id": "meetingbank-train-5",
+      "document_type": "meeting_notes",
+      "action_f1": 0.0,
+      "risk_f1": 0.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.4208,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.5,
+      "used_llm": false
+    },
+    {
+      "id": "JFrog-136478",
+      "document_type": "general",
+      "action_f1": 0.0,
+      "risk_f1": 0.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.1027,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": false
+    },
+    {
+      "id": "Mindville-10612",
+      "document_type": "general",
+      "action_f1": 0.0,
+      "risk_f1": 1.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.1799,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": false
+    },
+    {
+      "id": "EN2001d.A",
+      "document_type": "meeting_notes",
+      "action_f1": 0.0,
+      "risk_f1": 0.0,
+      "question_f1": 0.0,
+      "summary_jaccard": 0.0814,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": false
+    },
+    {
+      "id": "meetingbank-train-6",
+      "document_type": "meeting_notes",
+      "action_f1": 0.0,
+      "risk_f1": 1.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.5177,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": false
+    },
+    {
+      "id": "meetingbank-train-15",
+      "document_type": "meeting_notes",
+      "action_f1": 0.0,
+      "risk_f1": 0.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.3882,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": false
+    },
+    {
+      "id": "enron-00006",
+      "document_type": "email_thread",
+      "action_f1": 0.0,
+      "risk_f1": 1.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.6296,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": false
+    },
+    {
+      "id": "RedHat-14362245",
+      "document_type": "general",
+      "action_f1": 0.0,
+      "risk_f1": 1.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.1441,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": false
+    },
+    {
+      "id": "enron-00011",
+      "document_type": "email_thread",
+      "action_f1": 0.0,
+      "risk_f1": 1.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.2159,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": false
+    },
+    {
+      "id": "SecondLife-309711",
+      "document_type": "general",
+      "action_f1": 0.0,
+      "risk_f1": 0.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.0932,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": false
+    },
+    {
+      "id": "enron-00021",
+      "document_type": "email_thread",
+      "action_f1": 0.0,
+      "risk_f1": 0.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.1916,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": false
+    },
+    {
+      "id": "Jira-1841594",
+      "document_type": "general",
+      "action_f1": 0.0,
+      "risk_f1": 0.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.1156,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": false
+    },
+    {
+      "id": "EN2001d.C",
+      "document_type": "meeting_notes",
+      "action_f1": 0.25,
+      "risk_f1": 0.0,
+      "question_f1": 0.0,
+      "summary_jaccard": 0.0955,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": false
+    }
+  ]
+}

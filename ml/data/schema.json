@@ -1,0 +1,28 @@
+{
+  "dataset_name": "doc2action_sft_dataset",
+  "version": "0.1.0",
+  "task": "document_to_structured_actions",
+  "record_format": {
+    "id": "string, unique sample id",
+    "document_type": "string, one of: general|meeting_notes|prd|email_thread|sop",
+    "input_text": "string, raw source text",
+    "expected": {
+      "summary": "string",
+      "action_items": ["string"],
+      "risks": ["string"],
+      "open_questions": ["string"]
+    },
+    "meta": {
+      "source": "string, data source or sample file",
+      "split": "string, train|val|test"
+    }
+  },
+  "annotation_rules": [
+    "Summary should contain 1-2 concise sentences and focus on key conclusions.",
+    "Action items must be executable statements, avoid pure questions.",
+    "Risks should describe potential negative outcomes or blockers.",
+    "Open questions must be unresolved items that need confirmation.",
+    "Do not add information not grounded in the input text.",
+    "Keep wording close to source when possible for easier citation mapping."
+  ]
+}

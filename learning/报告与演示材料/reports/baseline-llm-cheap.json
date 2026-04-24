@@ -1,0 +1,124 @@
+{
+  "aggregate": {
+    "sample_count": 10,
+    "action_f1": 0.3467,
+    "risk_f1": 0.5,
+    "question_f1": 0.7,
+    "summary_jaccard": 0.1171,
+    "citation_hit_rate": 1.0,
+    "duplication_rate": 0.0,
+    "used_llm_rate": 1.0
+  },
+  "per_sample": [
+    {
+      "id": "train-001",
+      "document_type": "meeting_notes",
+      "action_f1": 1.0,
+      "risk_f1": 1.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.3421,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": true
+    },
+    {
+      "id": "train-002",
+      "document_type": "prd",
+      "action_f1": 0.0,
+      "risk_f1": 0.0,
+      "question_f1": 0.0,
+      "summary_jaccard": 0.0,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": true
+    },
+    {
+      "id": "train-003",
+      "document_type": "email_thread",
+      "action_f1": 0.0,
+      "risk_f1": 0.0,
+      "question_f1": 0.0,
+      "summary_jaccard": 0.0,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": true
+    },
+    {
+      "id": "train-004",
+      "document_type": "sop",
+      "action_f1": 0.5,
+      "risk_f1": 1.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.14,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": true
+    },
+    {
+      "id": "train-005",
+      "document_type": "general",
+      "action_f1": 0.5,
+      "risk_f1": 0.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.1,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": true
+    },
+    {
+      "id": "train-006",
+      "document_type": "meeting_notes",
+      "action_f1": 0.8,
+      "risk_f1": 1.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.1707,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": true
+    },
+    {
+      "id": "train-007",
+      "document_type": "prd",
+      "action_f1": 0.0,
+      "risk_f1": 0.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.0635,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": true
+    },
+    {
+      "id": "train-008",
+      "document_type": "email_thread",
+      "action_f1": 0.0,
+      "risk_f1": 0.0,
+      "question_f1": 0.0,
+      "summary_jaccard": 0.0,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": true
+    },
+    {
+      "id": "train-009",
+      "document_type": "sop",
+      "action_f1": 0.6667,
+      "risk_f1": 1.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.15,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": true
+    },
+    {
+      "id": "train-010",
+      "document_type": "general",
+      "action_f1": 0.0,
+      "risk_f1": 1.0,
+      "question_f1": 1.0,
+      "summary_jaccard": 0.2045,
+      "citation_hit_rate": 1.0,
+      "duplication_rate": 0.0,
+      "used_llm": true
+    }
+  ]
+}

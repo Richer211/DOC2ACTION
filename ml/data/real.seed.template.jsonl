@@ -1,0 +1,2 @@
+{"id":"real-001","document_type":"meeting_notes","input_text":"【脱敏后的真实文本】","expected":{"summary":"【1-2句总结】","action_items":["【动作1】","【动作2】"],"risks":["【风险1】"],"open_questions":["【待确认问题1】"]},"meta":{"source":"real_desensitized","split":"train"}}
+{"id":"real-002","document_type":"prd","input_text":"【脱敏后的真实文本】","expected":{"summary":"【1-2句总结】","action_items":["【动作1】"],"risks":["【风险1】"],"open_questions":["【待确认问题1】"]},"meta":{"source":"real_desensitized","split":"train"}}

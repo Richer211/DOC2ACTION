@@ -1,0 +1,60 @@
+{
+  "summary": "当前团队内消息来源分散在评论、系统提醒、审批流，用户经常遗漏关键通知，导致任务处理延迟；降低消息遗漏率",
+  "action_items": [
+    {
+      "title": "Review and follow up: 当前团队内消息来源分散在评论、系统提醒、审批流，用户经常遗漏关键通知，导致任务处理延迟",
+      "priority": "medium",
+      "source_chunk_ids": [
+        1
+      ]
+    }
+  ],
+  "risks": [
+    {
+      "description": "依赖消息中台提供统一查询接口",
+      "severity": "medium",
+      "source_chunk_ids": [
+        1
+      ]
+    },
+    {
+      "description": "历史数据字段不一致，可能导致筛选异常",
+      "severity": "medium",
+      "source_chunk_ids": [
+        1
+      ]
+    },
+    {
+      "description": "如果未读状态同步失败，用户会重复看到旧消息",
+      "severity": "medium",
+      "source_chunk_ids": [
+        1
+      ]
+    }
+  ],
+  "open_questions": [
+    {
+      "question": "是否允许用户自定义通知类型排序",
+      "source_chunk_ids": [
+        1
+      ]
+    },
+    {
+      "question": "是否需要提供按项目维度筛选",
+      "source_chunk_ids": [
+        1
+      ]
+    }
+  ],
+  "chunks": [
+    {
+      "id": 1,
+      "text": "# PRD Excerpt - Team Workspace Notification Center\n## 背景\n当前团队内消息来源分散在评论、系统提醒、审批流，用户经常遗漏关键通知，导致任务处理延迟。\n## 目标\n1. 降低消息遗漏率\n2. 提升高优先级通知处理时效\n3. 统一通知查看入口\n## 范围\n- 提供“通知中心”页面，聚合系统通知\n- 支持按类型筛选：任务、评论、审批\n- 支持已读/未读状态切换\n- 支持一键全部标记已读\n## 非目标\n- 本期不做推送策略优化\n- 本期不做邮件通知聚合\n- 本期不做多租户权限改造\n## 验收标准\n- 用户可以在 3 次点击内找到未读审批类通知\n- 高优先级通知展示置顶样式\n- 通知中心打开耗时不超过 1.5 秒\n## 风险与依赖\n- 依赖消息中台提供统一查询接口\n- 历史数据字段不一致，可能导致筛选异常\n- 如果未读状态同步失败，用户会重复看到旧消息\n## 开放问题\n- 是否允许用户自定义通知类型排序？\n- 是否需要提供按项目维度筛选？"
+    }
+  ],
+  "meta": {
+    "document_type": "prd",
+    "chunk_count": 1,
+    "used_llm": false
+  }
+}

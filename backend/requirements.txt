@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+openai
+pymongo
+numpy
+slowapi
+pytest
+redis
+rq
+PyJWT

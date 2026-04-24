@@ -1,0 +1,9 @@
+# Optional Redis for RQ async jobs (Phase 7.5 multi-process).
+# Usage: docker compose up -d redis
+# Then set backend DOC2ACTION_REDIS_URL=redis://127.0.0.1:6379/0 and run python -m app.rq_worker
+
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"

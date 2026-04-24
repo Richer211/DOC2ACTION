@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+**/__pycache__/
+*.py[cod]
+.venv/
+venv/
+**/.pytest_cache/
+**/.ruff_cache/
+
+# Node
+node_modules/
+.next/
+*.tsbuildinfo
+
+# Env files（勿将含真实 API Key / JWT Secret 的文件提交入库）
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+frontend/.env
+backend/.env
+
+# 常见误提交
+*.pem
+id_rsa
+*.key
+
+# Backend embedding cache (local)
+backend/.cache/
+
+# macOS
+.DS_Store
+
+# LoRA / full finetune outputs（体积可达数 GB，仅本地训练产物；需要时本地重新 train）
+ml/train/artifacts/
+
+# Large external datasets (kept local only)
+ml/data/external/enron/raw/**
+ml/data/external/enron/extracted/**
+ml/data/external/enron/processed/**
+ml/data/external/ami/raw/**
+ml/data/external/ami/extracted/**
+ml/data/external/ami/processed/**
+ml/data/external/meetingbank/processed/**
+ml/data/external/jira/raw/**
+ml/data/external/jira/extracted/**
+ml/data/external/jira/processed/**
