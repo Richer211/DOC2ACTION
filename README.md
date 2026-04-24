@@ -1,5 +1,11 @@
 # Doc2Action AI Workspace
 
+[![CI](https://github.com/Richer211/DOC2ACTION/actions/workflows/ci.yml/badge.svg)](https://github.com/Richer211/DOC2ACTION/actions)
+
+**持续集成（CI）**：向 `main` / `master` **推送代码**或开 **Pull Request** 时，GitHub Actions 工作流 [**CI**](https://github.com/Richer211/DOC2ACTION/actions) 会自动跑 **后端**（`ruff`、`pytest`）与 **前端**（`tsc --noEmit`、`eslint`）。上方徽章为绿色表示**当前默认分支上最近一次流水线已通过**；点徽章可打开 Actions 查看每次运行的日志与耗时。
+
+---
+
 Doc2Action 把非结构化文档转为可执行的结构化信息（Summary / Action Items / Risks / Open Questions），并支持引用原文 chunk、人工编辑与导出。当前实现覆盖 **MVP 主链路 + 鉴权 + 异步队列 + RAG + 知识库（P2）**。
 
 ## 当前能力一览
@@ -131,13 +137,29 @@ docker compose up -d redis
 
 ## 部署说明（现状与简历建议）
 
+### 「部署」一般指什么？和 CI 有什么区别？
+
+| | **CI（持续集成）** | **部署 / CD（持续交付）** |
+|---|-------------------|---------------------------|
+| **做什么** | 每次改代码自动 **跑测试和静态检查**，保证仓库质量 | 把可运行的 **前端 / 后端** 放到公网服务器，用户用 **HTTPS 域名** 访问 |
+| **本仓库** | 已在 GitHub Actions 里配置（见上方徽章） | **尚未**配置自动上线；需要你在平台里创建应用并填环境变量 |
+
+**部署一套全栈应用通常要管这些：**
+
+1. **前端（Next.js）**：在 **Vercel**（或 Netlify、Cloudflare Pages 等）连接 GitHub 仓库，平台负责 `npm run build`、CDN、HTTPS；你要配置 **`NEXT_PUBLIC_API_BASE_URL`** 指向线上后端地址（以及按需配置 `NEXT_PUBLIC_DOC2ACTION_API_KEY`）。  
+2. **后端（FastAPI）**：在 **Fly.io**、Render、Railway 等跑 **Python 进程**（常见方式是 Docker 镜像或平台提供的 Python 构建）；你要配置 **`OPENAI_API_KEY`**、可选 **`DOC2ACTION_*`**（JWT、API Key、Redis URL、`DOC2ACTION_ANALYSIS_DB` 路径等）。  
+3. **数据与队列**：SQLite 文件在云上需 **持久卷** 或改用托管数据库；异步任务需要 **Redis**（如 Upstash）并在 Fly 上**额外跑** `python -m app.rq_worker` 或等价进程。  
+4. **安全**：密钥只放在平台「环境变量」里，不要写进仓库；生产环境建议强制 HTTPS、限制 CORS、按需开鉴权。
+
+**Vercel + Fly** 常被一起提起，是因为分工清晰：**Vercel 擅长托管前端**，**Fly（或同类 PaaS）擅长跑长时间运行的 API 容器**；并不是说必须选这两家，同类平台可以替换。
+
 | 项目 | 说明 |
 |------|------|
 | **仓库内现有什么** | 根目录 `docker-compose.yml` **仅启动 Redis**，用于本地或小环境配合 RQ；**没有**官方的一键「前端 + 后端 + DB」生产 Compose / Dockerfile。 |
-| **算「有部署经验」吗** | 若你**自己**用云平台跑通过：例如前端 **Vercel**，后端 **Render / Railway / Fly.io**，Redis **Upstash** 或云厂商托管，环境变量注入、HTTPS、与 `NEXT_PUBLIC_API_BASE_URL` 指向生产 API——这完全可以写进简历，并与本仓库的架构一致。 |
-| **建议补强的故事** | 任选一种：① 为 backend 增加 `Dockerfile` + 单文件 Compose 跑 API + Redis；② 加 GitHub Actions 跑 `pytest` / `eslint`；③ 写一篇 `docs/deploy-xxx.md` 记录域名与环境变量清单。 |
+| **算「有部署经验」吗** | 若你**自己**在云平台把前后端跑通：配置构建命令、环境变量、域名与 HTTPS，并让浏览器能完成一次完整 Analyze——这就可以算作部署实践，可写进简历。 |
+| **建议补强的故事** | 例如：为 `backend` 增加 `Dockerfile` + 在 Fly/Render 上跑通；前端接 Vercel；把步骤记在 `docs/deploy-*.md`。 |
 
-结论：**代码库侧重可演示的全栈与 AI 管线**；**生产级一键部署需你按目标平台补一层封装**，这不影响把本项目作为面试主项目，只要在面试中能讲清「本地 Compose 管 Redis、线上如何拆前后端与密钥」。
+结论：**代码库侧重可演示的全栈与 AI 管线**；**生产级一键部署需按目标平台补一层封装**；面试时能讲清「CI 验质量、部署管运行环境与密钥」即可。
 
 ## Phase 6 快速验证
 
