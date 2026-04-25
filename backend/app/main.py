@@ -221,9 +221,9 @@ def issue_access_token(request: Request, body: LoginRequest) -> TokenResponse:
                 "request_id": rid,
             },
         )
-    demo_user = os.getenv("DOC2ACTION_DEMO_USER", "demo")
-    demo_pass = os.getenv("DOC2ACTION_DEMO_PASSWORD", "demo")
-    if body.username != demo_user or body.password != demo_pass:
+    demo_user = (os.getenv("DOC2ACTION_DEMO_USER") or "demo").strip()
+    demo_pass = (os.getenv("DOC2ACTION_DEMO_PASSWORD") or "demo").strip()
+    if body.username.strip() != demo_user or body.password != demo_pass:
         rid = getattr(request.state, "request_id", None)
         raise HTTPException(
             status_code=401,
