@@ -45,6 +45,7 @@ Doc2Action/
 │   │   └── ...
 │   ├── requirements.txt
 │   ├── Dockerfile           # Railway / 容器部署
+│   ├── railway.toml         # Railway：强制 Dockerfile，避免 Railpack
 │   └── .env.example
 ├── frontend/
 │   ├── src/

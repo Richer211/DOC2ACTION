@@ -14,13 +14,18 @@
 
 ## 1. Railway：部署 API
 
-### 1.1 新建服务
+### 1.1 新建服务（顺序很重要）
 
-1. 登录 [Railway](https://railway.app)，**New Project** → **Deploy from GitHub repo**，选中 **DOC2ACTION**（或你的仓库）。
-2. 打开该服务的 **Settings**：
-   - **Root Directory** 填：`backend`（ monorepo 时必填）。
-   - **Build** 选择用 **Dockerfile**（仓库已有 `backend/Dockerfile` 时会自动识别）。
-3. **Generate Domain** 得到公网 URL，例如 `https://doc2action-api-production-xxxx.up.railway.app`（以控制台为准）。
+monorepo 若**不**先设子目录，Railway 会在**仓库根目录**用默认 **Railpack** 猜构建计划，容易报错：`Error creating build plan with Railpack`。
+
+1. 登录 [Railway](https://railway.app)，**New Project** → **Deploy from GitHub repo**，选中 **DOC2ACTION**。
+2. **立刻**打开该服务 **Settings**（齿轮）：
+   - **Source → Root Directory**：填 **`backend`**（必须，与 `Dockerfile` / `requirements.txt` 同级）。
+   - **Build**：**Builder** 选 **Dockerfile**（不要选 Railpack / Nixpacks）。若已提交本仓库里的 `backend/railway.toml`，也会写明 `builder = DOCKERFILE`，与界面一致即可。
+3. 保存后 **Redeploy**（或 **Deployments → Redeploy**），再观察构建日志里应出现类似 **Using Dockerfile**。
+4. **Networking → Generate Domain** 得到公网 URL。
+
+若你**已经**在错误状态下部署失败：改完 Root Directory + Builder 后务必 **Redeploy**，不要只用旧失败记录。
 
 ### 1.2 环境变量（在 Railway Variables 中配置）
 
@@ -85,6 +90,7 @@ docker run --rm -p 8000:8000 \
 
 ## 4. 常见问题
 
+- **Build：`Error creating build plan with Railpack`**：几乎都是因为 **Root Directory 仍是仓库根** 或未改为 **Dockerfile** 构建。按 **§1.1** 设 `backend` + Dockerfile 后 Redeploy。
 - **浏览器里请求 API 报 CORS**：检查 `DOC2ACTION_CORS_ORIGINS` 是否**精确包含**前端 origin（协议 + 域名 + 端口，无路径、无尾斜杠）。
 - **401**：生产建议开启 `DOC2ACTION_JWT_SECRET` 或 `DOC2ACTION_API_KEY`，并在前端登录或配置 `NEXT_PUBLIC_DOC2ACTION_API_KEY`。
 - **迁 AWS / 阿里云**：同一 `backend/Dockerfile` 可推到 ECR/ACR，在 ECS/ACK 等上以相同环境变量运行；再配 ALB/SLB 与 HTTPS 证书即可，逻辑与 Railway 一致。

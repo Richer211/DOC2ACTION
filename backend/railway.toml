@@ -1,0 +1,7 @@
+# 在 Railway 中将「Root Directory」设为 backend 后，此文件会随代码被读取。
+# 强制使用 Dockerfile，避免 monorepo 根目录默认走 Railpack 导致 build plan 失败。
+[build]
+builder = "DOCKERFILE"
+
+[deploy]
+healthcheckPath = "/health"
