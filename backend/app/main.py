@@ -11,6 +11,7 @@ from typing import Any
 from fastapi import BackgroundTasks, Depends, FastAPI, Header, HTTPException, Request
 from fastapi.responses import PlainTextResponse
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.responses import Response
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
@@ -118,6 +119,17 @@ app.add_middleware(
 )
 app.add_middleware(SlowAPIMiddleware)
 app.add_middleware(RequestContextMiddleware)
+
+
+@app.get("/", tags=["health"])
+def root() -> dict[str, str]:
+    """公网根路径：避免只打开域名时像「没服务」；交互请用 /docs 或 /api/v1/*。"""
+    return {"service": "doc2action-backend", "docs": "/docs", "health": "/health"}
+
+
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon() -> Response:
+    return Response(status_code=204)
 
 
 @app.get("/health", tags=["health"])
