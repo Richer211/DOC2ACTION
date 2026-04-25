@@ -1,0 +1,96 @@
+# 最小线上演示：Vercel（前端）+ Railway（后端）
+
+面向 **Doc2Action 二版**：让浏览器能访问完整工作台（含登录、分析、知识库）。不涉及 AWS/阿里云；同一后端镜像日后可迁到其它容器平台。
+
+## 架构
+
+```text
+用户浏览器
+    → HTTPS → Vercel（Next.js）
+    → HTTPS → Railway（FastAPI，`backend/Dockerfile`）
+```
+
+前端通过 `NEXT_PUBLIC_API_BASE_URL` 调用后端；后端通过 `DOC2ACTION_CORS_ORIGINS` 允许该前端源站跨域。
+
+## 1. Railway：部署 API
+
+### 1.1 新建服务
+
+1. 登录 [Railway](https://railway.app)，**New Project** → **Deploy from GitHub repo**，选中 **DOC2ACTION**（或你的仓库）。
+2. 打开该服务的 **Settings**：
+   - **Root Directory** 填：`backend`（ monorepo 时必填）。
+   - **Build** 选择用 **Dockerfile**（仓库已有 `backend/Dockerfile` 时会自动识别）。
+3. **Generate Domain** 得到公网 URL，例如 `https://doc2action-api-production-xxxx.up.railway.app`（以控制台为准）。
+
+### 1.2 环境变量（在 Railway Variables 中配置）
+
+| 变量 | 必填 | 说明 |
+|------|------|------|
+| `OPENAI_API_KEY` | 若要 LLM/RAG | 与本地一致 |
+| `OPENAI_MODEL` | 否 | 例如 `gpt-4o-mini` |
+| `DOC2ACTION_CORS_ORIGINS` | **是**（有线上前端时） | 逗号分隔、**无尾斜杠**，例如 `https://你的项目.vercel.app`；本地调试可保留 `http://localhost:3000` 一并写上 |
+| `DOC2ACTION_JWT_SECRET` | 建议 | 生产随机长字符串；配合 `/login` |
+| `DOC2ACTION_DEMO_USER` / `DOC2ACTION_DEMO_PASSWORD` | 可选 | 与本地 demo 账号一致即可 |
+| `DOC2ACTION_API_KEY` | 可选 | 与前端 `NEXT_PUBLIC_DOC2ACTION_API_KEY` 一致时，未登录也可用 API Key |
+| `DOC2ACTION_REDIS_URL` | 可选 | 异步队列；演示可暂不配 |
+| `DOC2ACTION_ANALYSIS_DB` | 可选 | 不填则默认容器内 `backend/.cache/analyses.sqlite`（**无卷时重启可能丢库**） |
+
+**持久化 SQLite（可选）**：在 Railway 为该服务 **Add Volume**，例如挂载到 `/data`，并设置：
+
+`DOC2ACTION_ANALYSIS_DB=/data/analyses.sqlite`
+
+### 1.3 验证
+
+```bash
+curl -sS "https://<你的-railway-域名>/health"
+```
+
+应返回 JSON：`"status":"ok"`。
+
+---
+
+## 2. Vercel：部署前端
+
+1. 登录 [Vercel](https://vercel.com)，**Add New…** → **Project**，导入同一 GitHub 仓库。
+2. **Root Directory** 选：`frontend`（Framework Preset 一般为 **Next.js**）。
+3. **Environment Variables**（Production，必要时 Preview 同步）：
+
+| 变量 | 值 |
+|------|-----|
+| `NEXT_PUBLIC_API_BASE_URL` | Railway 公网 API 根 URL，**无尾斜杠**，例如 `https://doc2action-api-production-xxxx.up.railway.app` |
+| `NEXT_PUBLIC_DOC2ACTION_API_KEY` | 若后端启用了 `DOC2ACTION_API_KEY`，与之一致；否则可不设 |
+
+4. Deploy。记录前端域名，例如 `https://doc2action.vercel.app`。
+
+5. **回到 Railway**，把 `DOC2ACTION_CORS_ORIGINS` 更新为上述 Vercel 域名（可多值逗号分隔），**Redeploy** 后端使 CORS 生效。
+
+---
+
+## 3. 本地 Docker 自测（可选）
+
+在仓库内：
+
+```bash
+cd backend
+docker build -t doc2action-api:local .
+docker run --rm -p 8000:8000 \
+  -e OPENAI_API_KEY=sk-... \
+  -e DOC2ACTION_CORS_ORIGINS=http://localhost:3000 \
+  doc2action-api:local
+```
+
+浏览器仍用本地 `npm run dev` 连 `http://127.0.0.1:8000` 即可。
+
+---
+
+## 4. 常见问题
+
+- **浏览器里请求 API 报 CORS**：检查 `DOC2ACTION_CORS_ORIGINS` 是否**精确包含**前端 origin（协议 + 域名 + 端口，无路径、无尾斜杠）。
+- **401**：生产建议开启 `DOC2ACTION_JWT_SECRET` 或 `DOC2ACTION_API_KEY`，并在前端登录或配置 `NEXT_PUBLIC_DOC2ACTION_API_KEY`。
+- **迁 AWS / 阿里云**：同一 `backend/Dockerfile` 可推到 ECR/ACR，在 ECS/ACK 等上以相同环境变量运行；再配 ALB/SLB 与 HTTPS 证书即可，逻辑与 Railway 一致。
+
+---
+
+## 5. 与 CI 的关系
+
+GitHub Actions 的 **CI** 仍只负责测试与静态检查；**不会**自动部署到 Vercel/Railway。若需「合并到 main 自动发布」，可在二版后期再加 **Deploy** 工作流（分别调用 Vercel CLI / Railway API 或使用平台自带的 Git 集成）。

@@ -44,6 +44,7 @@ Doc2Action/
 │   │   ├── rag.py           # 切块与检索
 │   │   └── ...
 │   ├── requirements.txt
+│   ├── Dockerfile           # Railway / 容器部署
 │   └── .env.example
 ├── frontend/
 │   ├── src/
@@ -54,6 +55,7 @@ Doc2Action/
 │   └── package.json
 ├── docker-compose.yml       # 可选：仅 Redis（RQ）
 ├── docs/
+│   └── deploy-vercel-railway.md
 ├── learning/
 ├── ml/
 └── samples/
@@ -142,7 +144,7 @@ docker compose up -d redis
 | | **CI（持续集成）** | **部署 / CD（持续交付）** |
 |---|-------------------|---------------------------|
 | **做什么** | 每次改代码自动 **跑测试和静态检查**，保证仓库质量 | 把可运行的 **前端 / 后端** 放到公网服务器，用户用 **HTTPS 域名** 访问 |
-| **本仓库** | 已在 GitHub Actions 里配置（见上方徽章） | **尚未**配置自动上线；需要你在平台里创建应用并填环境变量 |
+| **本仓库** | 已在 GitHub Actions 里配置（见上方徽章） | **最小演示**：按 [`docs/deploy-vercel-railway.md`](docs/deploy-vercel-railway.md) 在 **Vercel + Railway** 手动连接仓库即可；未接 GitHub Actions 自动发布 |
 
 **部署一套全栈应用通常要管这些：**
 
@@ -155,9 +157,9 @@ docker compose up -d redis
 
 | 项目 | 说明 |
 |------|------|
-| **仓库内现有什么** | 根目录 `docker-compose.yml` **仅启动 Redis**，用于本地或小环境配合 RQ；**没有**官方的一键「前端 + 后端 + DB」生产 Compose / Dockerfile。 |
-| **算「有部署经验」吗** | 若你**自己**在云平台把前后端跑通：配置构建命令、环境变量、域名与 HTTPS，并让浏览器能完成一次完整 Analyze——这就可以算作部署实践，可写进简历。 |
-| **建议补强的故事** | 例如：为 `backend` 增加 `Dockerfile` + 在 Fly/Render 上跑通；前端接 Vercel；把步骤记在 `docs/deploy-*.md`。 |
+| **仓库内现有什么** | `backend/Dockerfile` + `backend/.dockerignore`（API 容器）；根目录 `docker-compose.yml` **仅 Redis**。一步步上线说明见 **`docs/deploy-vercel-railway.md`**。 |
+| **算「有部署经验」吗** | 若你**自己**在云平台把前后端跑通：配置构建命令、环境变量、域名与 HTTPS，并完成一次完整 Analyze——可写进简历。 |
+| **建议补强的故事** | 同一镜像可迁 **AWS（ECS/ECR）** 或 **阿里云（ACK/容器镜像服务）**；替换的是托管平台与网络，应用与环境变量模型不变。 |
 
 结论：**代码库侧重可演示的全栈与 AI 管线**；**生产级一键部署需按目标平台补一层封装**；面试时能讲清「CI 验质量、部署管运行环境与密钥」即可。
 

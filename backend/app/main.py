@@ -68,6 +68,14 @@ ANALYZE_RATE_LIMIT = os.getenv("DOC2ACTION_RATE_LIMIT", "60/minute")
 limiter = Limiter(key_func=get_remote_address, default_limits=[])
 
 
+def _cors_allow_origins() -> list[str]:
+    """浏览器跨域：本地默认 localhost:3000；生产用 DOC2ACTION_CORS_ORIGINS（逗号分隔，勿尾斜杠）。"""
+    raw = os.getenv("DOC2ACTION_CORS_ORIGINS", "").strip()
+    if not raw:
+        return ["http://localhost:3000"]
+    return [o.strip().rstrip("/") for o in raw.split(",") if o.strip()]
+
+
 @asynccontextmanager
 async def _lifespan(_: FastAPI):
     analysis_store.init_schema()
@@ -102,7 +110,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=_cors_allow_origins(),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
