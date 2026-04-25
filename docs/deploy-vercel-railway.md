@@ -23,7 +23,7 @@ monorepo 若**不**先设子目录，Railway 会在**仓库根目录**用默认 
    - **Source → Root Directory**：填 **`backend`**（必须，与 `Dockerfile` / `requirements.txt` 同级）。
    - **Build**：**Builder** 选 **Dockerfile**（不要选 Railpack / Nixpacks）。若已提交本仓库里的 `backend/railway.toml`，也会写明 `builder = DOCKERFILE`，与界面一致即可。
 3. 保存后 **Redeploy**（或 **Deployments → Redeploy**），再观察构建日志里应出现类似 **Using Dockerfile**。
-4. **Networking → Generate Domain** 得到公网 URL。
+4. **Networking → Generate Domain** 得到公网 URL。生成后**务必**在 **Settings → Networking** 里点开该 `*.up.railway.app` 域名，确认 **Target port（目标端口）** 与**进程监听端口**一致。Railway 会注入 `PORT`（Uvicorn 日志里常见为 **`...:8080`**）。若 Target port 被设成 **3000** 等错误值，会出现 **[Deploy Logs 里内部 /health=200，但公网与 HTTP Logs 全是 502](https://docs.railway.com/networking/troubleshooting/application-failed-to-respond)** 的现象。
 5. **`Settings → Deploy` 里不要配置 Cron Schedule**（如 `0 0 * * *`）。在 Railway 中，[Cron 用于「到点执行、跑完就退出」的短任务](https://docs.railway.com/cron-jobs)；**Uvicorn / Web API 是长驻、不退出的进程**，与 Cron 语义冲突，容易出现 **HTTP 502、Deploy Logs 几乎为空、时间线里 Network 不启动、界面上写「Next in x hours」** 等。本仓库的后端**必须**作普通 Web 服务一直运行；需要定时任务请**另开服务**或在应用里用调度库。
 
 若你**已经**在错误状态下部署失败：改完 Root Directory + Builder 后务必 **Redeploy**，不要只用旧失败记录。
@@ -95,6 +95,7 @@ docker run --rm -p 8000:8000 \
 - **浏览器里请求 API 报 CORS**：检查 `DOC2ACTION_CORS_ORIGINS` 是否**精确包含**前端 origin（协议 + 域名 + 端口，无路径、无尾斜杠）。
 - **401**：生产建议开启 `DOC2ACTION_JWT_SECRET` 或 `DOC2ACTION_API_KEY`，并在前端登录或配置 `NEXT_PUBLIC_DOC2ACTION_API_KEY`。
 - **迁 AWS / 阿里云**：同一 `backend/Dockerfile` 可推到 ECR/ACR，在 ECS/ACK 等上以相同环境变量运行；再配 ALB/SLB 与 HTTPS 证书即可，逻辑与 Railway 一致。
+- **Deploy Logs 里 /health=200、但浏览器访问 /health 仍 502（HTTP Logs 也 502）**：**多为公网域名的 [Target port](https://docs.railway.com/networking/troubleshooting/application-failed-to-respond) 与容器内监听端口不一致**（例如边沿仍指向 **3000**、Uvicorn 实际在 **8080**）。到 **Settings → Networking** 里编辑 `*.up.railway.app`，把 **Target port** 改为与日志里 `Uvicorn running on` **同一端口**。
 - **Deploy Logs 很空、时间线里「Network: Not started」、HTTP 全是 502**：**绝大多数是误开了 `Settings → Deploy → Cron Schedule`**。请**完全删除**该 Cron 表达式，保存后再 **Redeploy**（见上文 §1.1 第 5 点）。并确认 **Networking** 已 **Generate Domain**；**不要**在 Variables 里手填/覆盖 **`PORT`**。修复后 Deploy Logs 里应出现 `[doc2action] starting uvicorn...`；若仍全空，试 **Railway CLI** `railway logs` 或向官方带 deployment id 反馈。
 
 ---
