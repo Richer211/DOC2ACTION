@@ -94,6 +94,7 @@ docker run --rm -p 8000:8000 \
 - **浏览器里请求 API 报 CORS**：检查 `DOC2ACTION_CORS_ORIGINS` 是否**精确包含**前端 origin（协议 + 域名 + 端口，无路径、无尾斜杠）。
 - **401**：生产建议开启 `DOC2ACTION_JWT_SECRET` 或 `DOC2ACTION_API_KEY`，并在前端登录或配置 `NEXT_PUBLIC_DOC2ACTION_API_KEY`。
 - **迁 AWS / 阿里云**：同一 `backend/Dockerfile` 可推到 ECR/ACR，在 ECS/ACK 等上以相同环境变量运行；再配 ALB/SLB 与 HTTPS 证书即可，逻辑与 Railway 一致。
+- **Deploy Logs 很空、时间线里「Network: Not started」、HTTP 全是 502**：先确认 **Settings → Networking** 已 **Generate Domain** 且**不是**只建了私有网络；**不要**在 Variables 里手填/覆盖平台的 **`PORT`**。若服务 **Settings → Deploy** 里加了 **Cron Schedule**，可先关闭再 **Redeploy** 以排除与常驻 Web 进程混淆。推送最新镜像后，Deploy Logs 里应出现 `[doc2action] starting uvicorn...` 与 Uvicorn 访问行；若仍全空，用 Railway CLI 的 `railway logs` 或向官方工单附带 deployment id。
 
 ---
 
