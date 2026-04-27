@@ -10,6 +10,4 @@
 | `sop_note.md` | SOP / 流程说明 |
 | `mixed_notes.md` | 混合笔记 |
 
-`analyze_output/` 为历史导出示例，可作格式对照。
-
 批量检查可使用仓库内 `scripts/run_sample_checks.py`（若已配置）。

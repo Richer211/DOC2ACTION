@@ -298,7 +298,7 @@ def analyses_recent(
     dependencies=[Depends(require_api_key_if_configured)],
 )
 def eval_summary() -> dict[str, Any]:
-    """离线评测报告摘要（默认 `learning/报告与演示材料/reports/baseline-eval.md`）。"""
+    """Offline evaluation report summary (defaults to backend/.cache/baseline-eval.md)."""
     return load_eval_summary()
 
 

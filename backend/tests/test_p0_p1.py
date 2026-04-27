@@ -34,13 +34,26 @@ def test_analyses_recent_after_sync_rules(client: TestClient) -> None:
     assert items[0]["run_kind"] == "sync"
 
 
-def test_eval_summary_reads_baseline(monkeypatch: pytest.MonkeyPatch, client: TestClient) -> None:
+def test_eval_summary_reads_baseline(
+    tmp_path, monkeypatch: pytest.MonkeyPatch, client: TestClient
+) -> None:
     monkeypatch.delenv("DOC2ACTION_API_KEY", raising=False)
-    # client fixture already cleared auth; need client with eval route
-    from pathlib import Path
-
-    repo = Path(__file__).resolve().parents[2]
-    md = repo / "learning" / "报告与演示材料" / "reports" / "baseline-eval.md"
+    md = tmp_path / "baseline-eval.md"
+    md.write_text(
+        "\n".join(
+            [
+                "# Baseline Evaluation Report",
+                "",
+                "## Aggregate Metrics",
+                "- sample_count: 10",
+                "- action_f1: 0.5",
+                "",
+                "## Per Sample",
+                "- sample-1",
+            ]
+        ),
+        encoding="utf-8",
+    )
     monkeypatch.setenv("DOC2ACTION_EVAL_REPORT_MD", str(md))
     r = client.get("/api/v1/eval/summary")
     assert r.status_code == 200
