@@ -17,6 +17,12 @@ The project is built as a small production-style LLM application: FastAPI backen
 - App: [https://doc-2-action.vercel.app](https://doc-2-action.vercel.app)
 - API docs: [https://doc2action-production.up.railway.app/docs](https://doc2action-production.up.railway.app/docs)
 - Deployment notes: [`docs/deploy-vercel-railway.md`](docs/deploy-vercel-railway.md)
+- Evaluation report: [`docs/eval-report.md`](docs/eval-report.md)
+- Load test notes: [`docs/load-test.md`](docs/load-test.md)
+
+## Interface Preview
+
+![Doc2Action workspace preview](docs/assets/doc2action-workspace-preview.svg)
 
 ## Features
 
@@ -90,6 +96,7 @@ uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 Useful endpoints:
 
 - `GET http://127.0.0.1:8000/health`
+- `GET http://127.0.0.1:8000/version`
 - `GET http://127.0.0.1:8000/docs`
 
 Example request:
@@ -205,6 +212,10 @@ python ../ml/eval/evaluate.py
 ```
 
 Generated reports are written under `learning/报告与演示材料/`.
+
+For evaluation methodology and current baseline results, see [`docs/eval-report.md`](docs/eval-report.md).
+
+For smoke-level latency and error-rate checks, see [`docs/load-test.md`](docs/load-test.md).
 
 ## Repository Hygiene
 
