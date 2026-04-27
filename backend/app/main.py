@@ -69,6 +69,29 @@ ANALYZE_RATE_LIMIT = os.getenv("DOC2ACTION_RATE_LIMIT", "60/minute")
 limiter = Limiter(key_func=get_remote_address, default_limits=[])
 
 
+def _runtime_info() -> dict[str, str]:
+    commit = ""
+    for name in ("RAILWAY_GIT_COMMIT_SHA", "VERCEL_GIT_COMMIT_SHA", "GIT_COMMIT_SHA"):
+        value = os.getenv(name, "").strip()
+        if value:
+            commit = value[:12]
+            break
+
+    environment = (
+        os.getenv("RAILWAY_ENVIRONMENT_NAME", "").strip()
+        or os.getenv("VERCEL_ENV", "").strip()
+        or os.getenv("DOC2ACTION_ENV", "").strip()
+        or "local"
+    )
+
+    return {
+        "service": "doc2action-backend",
+        "version": app.version,
+        "commit_sha": commit or "unknown",
+        "environment": environment,
+    }
+
+
 def _cors_allow_origins() -> list[str]:
     """浏览器跨域：本地默认 localhost:3000；生产用 DOC2ACTION_CORS_ORIGINS（逗号分隔，勿尾斜杠）。"""
     raw = os.getenv("DOC2ACTION_CORS_ORIGINS", "").strip()
@@ -124,7 +147,7 @@ app.add_middleware(RequestContextMiddleware)
 @app.get("/", tags=["health"])
 def root() -> dict[str, str]:
     """公网根路径：避免只打开域名时像「没服务」；交互请用 /docs 或 /api/v1/*。"""
-    return {"service": "doc2action-backend", "docs": "/docs", "health": "/health"}
+    return {**_runtime_info(), "docs": "/docs", "health": "/health", "version_url": "/version"}
 
 
 @app.get("/favicon.ico", include_in_schema=False)
@@ -134,12 +157,17 @@ def favicon() -> Response:
 
 @app.get("/health", tags=["health"])
 def health_check() -> dict[str, str]:
-    return {"status": "ok", "service": "doc2action-backend"}
+    return {"status": "ok", **_runtime_info()}
 
 
 @app.get("/api/v1/health", tags=["health"])
 def health_check_v1() -> dict[str, str]:
     return health_check()
+
+
+@app.get("/version", tags=["health"])
+def version() -> dict[str, str]:
+    return _runtime_info()
 
 
 class AnalyzeRequest(BaseModel):
