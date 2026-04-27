@@ -39,13 +39,24 @@ monorepo 若**不**先设子目录，Railway 会在**仓库根目录**用默认 
 | `DOC2ACTION_DEMO_USER` / `DOC2ACTION_DEMO_PASSWORD` | 可选 | 与本地 demo 账号一致即可 |
 | `DOC2ACTION_API_KEY` | 可选 | 与前端 `NEXT_PUBLIC_DOC2ACTION_API_KEY` 一致时，未登录也可用 API Key |
 | `DOC2ACTION_REDIS_URL` | 可选 | 异步队列；演示可暂不配 |
-| `DOC2ACTION_ANALYSIS_DB` | 可选 | 不填则默认容器内 `backend/.cache/analyses.sqlite`（**无卷时重启可能丢库**） |
+| `DOC2ACTION_ANALYSIS_DB` | 推荐 | 不填则默认容器内 `backend/.cache/analyses.sqlite`（**无卷时重启会丢历史记录**） |
 
-**持久化 SQLite（可选）**：在 Railway 为该服务 **Add Volume**，例如挂载到 `/data`，并设置：
+### 1.3 持久化 SQLite（推荐）
+
+Doc2Action 的“最近分析”和知识库元数据默认写入 SQLite。若不挂载 Railway Volume，数据会存在容器文件系统里，**重新部署、横向扩容或容器迁移后可能丢失**。线上演示若希望保留历史记录，建议开启持久化：
+
+1. Railway → `DOC2ACTION` 服务 → **Storage / Volumes** → **Add Volume**。
+2. 将 Volume 挂载到容器路径，例如：`/data`。
+3. Railway → **Variables** 新增：
 
 `DOC2ACTION_ANALYSIS_DB=/data/analyses.sqlite`
 
-### 1.3 验证
+4. **Redeploy** 后端。
+5. 在线上跑一次 Analyze，刷新页面确认“最近分析”可见；再 Redeploy 一次后检查记录仍在。
+
+> 当前 SQLite 适合 MVP / 单实例演示。若后续并发写入、多实例扩容或需要查询分析，应迁移到 Postgres，并把 `analysis_store` / `kb_store` 改为数据库连接池。
+
+### 1.4 验证
 
 ```bash
 curl -sS "https://<你的-railway-域名>/health"
@@ -102,4 +113,63 @@ docker run --rm -p 8000:8000 \
 
 ## 5. 与 CI 的关系
 
-GitHub Actions 的 **CI** 仍只负责测试与静态检查；**不会**自动部署到 Vercel/Railway。若需「合并到 main 自动发布」，可在二版后期再加 **Deploy** 工作流（分别调用 Vercel CLI / Railway API 或使用平台自带的 Git 集成）。
+GitHub Actions 的 **CI** 负责测试与静态检查；当前线上发布由 **Vercel / Railway 的 GitHub 集成**自动触发，而不是由 GitHub Actions 的 Deploy job 触发。
+
+推荐发布链路：
+
+1. 从 `main` 拉功能分支，例如 `feat/kb-search`、`fix/railway-health`。
+2. 提交 PR 后，GitHub Actions 跑 CI，Vercel 自动生成 Preview Deployment。
+3. CI 通过并人工检查 Preview 后，再 merge 到 `main`。
+4. `main` 更新后：
+   - Vercel 使用 `frontend/` 自动发布 Production。
+   - Railway 使用 `backend/` 自动发布 Production。
+5. Railway 建议开启 **Wait for CI**，避免 CI 失败时后端仍被部署。
+
+若后续需要更严格的发布控制，可再增加 GitHub Actions Deploy workflow：在 CI 成功后调用 Vercel CLI / Railway API，并加入人工审批、版本标签、回滚记录等。
+
+---
+
+## 6. 分支保护建议
+
+GitHub 上建议保护 `main`，避免本地直接 push 坏代码触发线上部署：
+
+1. GitHub 仓库 → **Settings → Branches**。
+2. **Add branch ruleset** 或 **Add branch protection rule**。
+3. Branch name pattern 填：`main`。
+4. 建议开启：
+   - **Require a pull request before merging**。
+   - **Require status checks to pass before merging**，并选择当前 CI workflow。
+   - **Require branches to be up to date before merging**。
+   - **Block force pushes**。
+   - **Restrict deletions**。
+5. 保存后，日常流程改为：功能分支 → PR → CI/Preview 验证 → merge `main` → 自动发布。
+
+---
+
+## 7. 本次部署排障复盘（面试可讲）
+
+这次线上化的核心不是“把项目扔到平台上”，而是把 monorepo、容器端口、跨域、健康检查和发布门禁串成可复用的部署链路。
+
+可以按下面思路讲：
+
+- **现象 1：前端 Backend Health 显示 `Failed to fetch`**  
+  先区分是 CORS、后端不可达还是认证问题。通过直接访问 Railway `/health` 发现后端公网 502，因此先排除前端页面逻辑，把问题收敛到 Railway 后端。
+
+- **现象 2：Railway Build 成功，但 Deploy Logs 为空、HTTP Logs 全 502**  
+  一开始容易误判为代码没启动。后来发现服务被配置了 **Cron Schedule**，而 Railway Cron 适合“到点执行并退出”的短任务，不适合 Uvicorn 这种长驻 Web 进程。修复方式是将 Schedule 改成 **No schedule**，让服务作为普通 Web API 常驻。
+
+- **现象 3：Deploy Logs 里 `/health` 已经 200，但浏览器访问 `/health` 仍 502**  
+  这说明容器内部已经健康，问题在 Railway Edge Proxy 到容器端口的映射。最终定位到 **Networking Target port** 与 Uvicorn 监听端口不一致；将 Target port 改为日志里的 `8080` 后公网恢复。
+
+- **现象 4：Vercel 前端能打开，但浏览器请求 API 失败**  
+  通过 CORS 原理定位：后端 `DOC2ACTION_CORS_ORIGINS` 必须填**前端页面 origin**，例如 `https://doc-2-action.vercel.app`，而不是 Railway 后端 URL。
+
+- **现象 5：登录 401**  
+  Demo 登录账号来自 Railway Variables：`DOC2ACTION_DEMO_USER` / `DOC2ACTION_DEMO_PASSWORD`。空字符串变量不会自动回退默认值；后端也做了 `.strip()` 以降低复制粘贴空格导致的误配。
+
+这次沉淀出的工程化措施：
+
+- `backend/Dockerfile` 显式使用 `uvicorn --host 0.0.0.0 --port ${PORT:-8000}`，并在启动时打印日志，便于云端排障。
+- `backend/railway.toml` 固定 Dockerfile 构建，避免 monorepo 被 Railpack 误识别。
+- 文档中补齐 Root Directory、Cron、Target port、CORS、Volume、CI 门禁等部署清单。
+- 发布链路上建议启用 Railway **Wait for CI** 和 GitHub `main` 分支保护，避免 CI 未通过的代码自动上线。
