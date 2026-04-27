@@ -46,3 +46,13 @@ ml/data/external/meetingbank/processed/**
 ml/data/external/jira/raw/**
 ml/data/external/jira/extracted/**
 ml/data/external/jira/processed/**
+
+# Local-only notes, interview prep, generated reports, and private planning docs
+docs/
+learning/
+export/
+MVP.md
+PRD.md
+开发拆分.md
+项目升级目标与路线图.md
+samples/analyze_output/

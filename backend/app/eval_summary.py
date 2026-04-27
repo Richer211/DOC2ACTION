@@ -11,8 +11,8 @@ def default_report_path() -> Path:
     raw = os.getenv("DOC2ACTION_EVAL_REPORT_MD", "").strip()
     if raw:
         return Path(raw).expanduser()
-    repo = Path(__file__).resolve().parents[2]
-    return repo / "learning" / "报告与演示材料" / "reports" / "baseline-eval.md"
+    backend_dir = Path(__file__).resolve().parents[1]
+    return backend_dir / ".cache" / "baseline-eval.md"
 
 
 def load_eval_summary() -> dict[str, Any]:
@@ -23,7 +23,7 @@ def load_eval_summary() -> dict[str, Any]:
             "source_file": str(path),
             "aggregate": {},
             "excerpt": "",
-            "hint": "在仓库根目录运行 ml/eval/evaluate.py 生成 baseline-eval.md 后刷新本页。",
+            "hint": "Set DOC2ACTION_EVAL_REPORT_MD or copy a generated baseline-eval.md into backend/.cache/.",
         }
     text = path.read_text(encoding="utf-8")
     aggregate: dict[str, Any] = {}

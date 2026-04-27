@@ -16,13 +16,6 @@ The project is built as a small production-style LLM application: FastAPI backen
 
 - App: [https://doc-2-action.vercel.app](https://doc-2-action.vercel.app)
 - API docs: [https://doc2action-production.up.railway.app/docs](https://doc2action-production.up.railway.app/docs)
-- Deployment notes: [`docs/deploy-vercel-railway.md`](docs/deploy-vercel-railway.md)
-- Evaluation report: [`docs/eval-report.md`](docs/eval-report.md)
-- Load test notes: [`docs/load-test.md`](docs/load-test.md)
-
-## Interface Preview
-
-![Doc2Action workspace preview](docs/assets/doc2action-workspace-preview.svg)
 
 ## Features
 
@@ -61,7 +54,6 @@ Doc2Action/
 │   ├── src/app/
 │   ├── src/components/
 │   └── src/lib/
-├── docs/
 ├── ml/
 ├── samples/
 └── scripts/
@@ -190,8 +182,6 @@ The current production setup uses:
 - Dockerfile-based backend build
 - GitHub Actions CI with protected `main`
 
-Deployment details and troubleshooting notes are in [`docs/deploy-vercel-railway.md`](docs/deploy-vercel-railway.md).
-
 Important production notes:
 
 - Railway service root directory should be `backend`.
@@ -211,11 +201,7 @@ python ../scripts/run_sample_checks.py
 python ../ml/eval/evaluate.py
 ```
 
-Generated reports are written under `learning/报告与演示材料/`.
-
-For evaluation methodology and current baseline results, see [`docs/eval-report.md`](docs/eval-report.md).
-
-For smoke-level latency and error-rate checks, see [`docs/load-test.md`](docs/load-test.md).
+Generated reports are intended for local review and are ignored from the public repository.
 
 ## Repository Hygiene
 
@@ -225,5 +211,3 @@ Before pushing changes, check:
 - no real API keys or JWT secrets
 - no `node_modules/`, `.venv/`, or `.cache/`
 - no large training artifacts or local datasets
-
-See also [`docs/security-secrets.md`](docs/security-secrets.md).
